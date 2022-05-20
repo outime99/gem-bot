@@ -2,10 +2,7 @@ package com.gmm.bot.ai;
 
 import com.gmm.bot.enumeration.BattleMode;
 import com.gmm.bot.enumeration.GemType;
-import com.gmm.bot.model.Grid;
-import com.gmm.bot.model.Hero;
-import com.gmm.bot.model.Pair;
-import com.gmm.bot.model.Player;
+import com.gmm.bot.model.*;
 import com.smartfoxserver.v2.entities.data.ISFSArray;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
@@ -13,7 +10,11 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.web.client.RestTemplate;
 import sfs2x.client.SmartFox;
 import sfs2x.client.core.BaseEvent;
 import sfs2x.client.core.IEventListener;
@@ -64,6 +65,7 @@ public abstract class BaseBot implements IEventListener {
 
     public void start() {
         try {
+            login2();
             this.logStatus("init", "Initializing");
             this.init();
             this.connect();
@@ -73,12 +75,12 @@ public abstract class BaseBot implements IEventListener {
     }
 
     private void init() {
-        username = "bot_" + UUID.randomUUID();
+        username = "Trang2k";
         sfsClient = new SmartFox();
         data = new SFSObject();
         isJoinGameRoom = false;
         disconnect = false;
-        this.token = "bot";
+//        this.token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsaW5oLnZ1dGFpIiwiYXV0aCI6IlJPTEVfVVNFUiIsIkxBU1RfTE9HSU5fVElNRSI6MTY1MjcxNzY0NjEwNSwiZXhwIjoxNjUyODA0MDQ2fQ.s5SuYqNYSeId8j8yiisMXHhorcxShrP9DyYPfXgPRSdNanBLPR5uNuwb_gNKWePhq2WO5Tfl9ZfMwYJi5_j_WA";
         this.sfsClient.addEventListener(SFSEvent.CONNECTION, this);
         this.sfsClient.addEventListener(SFSEvent.CONNECTION_LOST, this);
         this.sfsClient.addEventListener(SFSEvent.LOGIN, this);
@@ -288,5 +290,14 @@ public abstract class BaseBot implements IEventListener {
             sendZoneExtensionRequest(LOBBY_FIND_GAME, data);
             log("SendZoneExtension LOBBY_FIND_GAME");
         }
+    }
+    private void login2(){
+        String username ="linh.vutai";
+        String password ="123456";
+        HttpEntity<Acoount> request = new HttpEntity<>(new Acoount(username,password));
+        String URL ="http://172.16.100.112:8081/api/v1/user/authenticate";
+        RestTemplate restTemplate = new RestTemplate();
+        Object response= restTemplate.postForObject(URL,request,Object.class);
+        this.token=response.toString().split("=")[1].replace("}","");
     }
 }

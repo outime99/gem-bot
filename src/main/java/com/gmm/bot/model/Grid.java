@@ -21,13 +21,15 @@ public class Grid {
         updateGems(gemsCode,gemModifiers);
         this.myHeroGemType = heroGemType;
     }
-
+    //gemModifiers gem đặc biệt
     public void updateGems(ISFSArray gemsCode,ISFSArray gemModifiers ) {
         gems.clear();
         gemTypes.clear();
         if(gemModifiers != null){
+
             for (int i = 0; i < gemsCode.size(); i++) {
                 Gem gem = new Gem(i, GemType.from(gemsCode.getByte(i)), GemModifier.from(gemModifiers.getByte(i)));
+//                if(Integer.parseInt(gemModifiers.getByte(i).toString())!=0) System.out.println(gemModifiers.getByte(i).toString()+" "+i);
                 gems.add(gem);
                 gemTypes.add(gem.getType());
             }
@@ -42,7 +44,8 @@ public class Grid {
     }
 
 
-    public Pair<Integer> recommendSwapGem() {
+    public Pair<Integer> recommendSwapGem(Player botPlayer) {
+        System.out.println(botPlayer.getRecommendGemType());
         List<GemSwapInfo> listMatchGem = suggestMatch();
         if (listMatchGem.isEmpty()) {
             return new Pair<>(-1, -1);
@@ -53,8 +56,10 @@ public class Grid {
             return matchGemSizeThanFour.get().getIndexSwapGem();
         }
         Optional<GemSwapInfo> matchGemSizeThanThree =
-                listMatchGem.stream().filter(gemMatch -> gemMatch.getSizeMatch() > 3).findFirst();
+                listMatchGem.stream().filter(gemMatch -> gemMatch.getSizeMatch() > 3 && myHeroGemType.contains(gemMatch.getType())).findFirst();
         if (matchGemSizeThanThree.isPresent()) {
+            System.out.println(matchGemSizeThanThree.get().getType());
+            System.out.println(myHeroGemType);
             return matchGemSizeThanThree.get().getIndexSwapGem();
         }
         Optional<GemSwapInfo> matchGemSword =
@@ -69,9 +74,17 @@ public class Grid {
                 return matchGem.get().getIndexSwapGem();
             }
         }
+//        for (GemSwapInfo gemSwap: listMatchGem) {
+//            for (GemType heroGemType : myHeroGemType) {
+//                if ((gemSwap.getSizeMatch() > 3 && heroGemType.equals(gemSwap.getType())) ||
+//                        (gemSwap.getSizeMatch() > 3 && Objects.equals(gemSwap.getType(), GemType.SWORD))) {
+//                    return gemSwap.getIndexSwapGem();
+//                }
+//            }
+//        }
         return listMatchGem.get(0).getIndexSwapGem();
     }
-
+//find gem ăn dc
     public List<GemSwapInfo> suggestMatch() {
         List<GemSwapInfo> listMatchGem = new ArrayList<>();
         for (Gem currentGem : gems) {

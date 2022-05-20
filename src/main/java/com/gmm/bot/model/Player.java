@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -26,7 +27,9 @@ public class Player {
     }
 
     public Hero firstHeroAlive() {
-        return heroes.stream().filter(Hero::isAlive).findFirst().orElse(null);
+//        return heroes.stream().filter(Hero::isAlive).findFirst().orElse(null);
+        List<Hero> herolive = heroes.stream().filter(Hero::isAlive).collect(Collectors.toList());
+        return herolive.get(herolive.size()-1);
     }
 
     public Set<GemType> getRecommendGemType() {
@@ -34,4 +37,5 @@ public class Player {
         heroes.stream().filter(Hero::isAlive).forEach(hero -> heroGemType.addAll(hero.getGemTypes()));
         return heroGemType;
     }
+
 }

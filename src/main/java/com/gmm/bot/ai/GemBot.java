@@ -58,6 +58,7 @@ public class GemBot extends BaseBot{
 
     @Override
     protected void startTurn(ISFSObject params) {
+        System.out.println("startTurn");
         currentPlayerId = params.getInt("currentPlayerId");
         if (!isBotTurn()) {
             return;
@@ -159,7 +160,7 @@ public class GemBot extends BaseBot{
     private class SendRequestSwapGem implements Runnable {
         @Override
         public void run() {
-            Pair<Integer> indexSwap = grid.recommendSwapGem();
+            Pair<Integer> indexSwap = grid.recommendSwapGem(botPlayer);
             data.putInt("index1", indexSwap.getParam1());
             data.putInt("index2", indexSwap.getParam2());
             log("sendExtensionRequest()|room:" + room.getName() + "|extCmd:" + ConstantCommand.SWAP_GEM + "|index1: " + indexSwap.getParam1() + " index1: " + indexSwap.getParam2());
