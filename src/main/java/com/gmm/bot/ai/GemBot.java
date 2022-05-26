@@ -149,9 +149,11 @@ public class GemBot extends BaseBot{
                 data.putUtfString("targetId", enemyPlayer.firstHeroAlive().getId().toString());
             }
             data.putUtfString("selectedGem", String.valueOf(selectGem().getCode()));
-            data.putUtfString("gemIndex", String.valueOf(ThreadLocalRandom.current().nextInt(64)));
+//            data.putUtfString("gemIndex", String.valueOf(ThreadLocalRandom.current().nextInt(64)));
+            data.putUtfString("gemIndex", String.valueOf(grid.bestGem()));
             data.putBool("isTargetAllyOrNot",false);
             log("sendExtensionRequest()|room:" + room.getName() + "|extCmd:" + ConstantCommand.USE_SKILL + "|Hero cast skill: " + heroCastSkill.getName());
+            log(data.getUtfString("gemIndex"));
             sendExtensionRequest(ConstantCommand.USE_SKILL, data);
         }
 

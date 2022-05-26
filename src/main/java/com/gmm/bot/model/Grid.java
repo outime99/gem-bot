@@ -16,17 +16,20 @@ public class Grid {
     private List<Gem> gems = new ArrayList<>();
     private Set<GemType> gemTypes = new HashSet<>();
     private Set<GemType> myHeroGemType;
+    private ISFSArray gemModifiers;
+    private int[][] gemss ;
 
     public Grid(ISFSArray gemsCode,ISFSArray gemModifiers, Set<GemType> heroGemType) {
         updateGems(gemsCode,gemModifiers);
         this.myHeroGemType = heroGemType;
     }
+
     //gemModifiers gem đặc biệt
     public void updateGems(ISFSArray gemsCode,ISFSArray gemModifiers ) {
         gems.clear();
         gemTypes.clear();
+        this.gemModifiers = gemModifiers;
         if(gemModifiers != null){
-
             for (int i = 0; i < gemsCode.size(); i++) {
                 Gem gem = new Gem(i, GemType.from(gemsCode.getByte(i)), GemModifier.from(gemModifiers.getByte(i)));
 //                if(Integer.parseInt(gemModifiers.getByte(i).toString())!=0) System.out.println(gemModifiers.getByte(i).toString()+" "+i);
@@ -45,7 +48,9 @@ public class Grid {
 
 
     public Pair<Integer> recommendSwapGem(Player botPlayer) {
-        System.out.println(botPlayer.getRecommendGemType());
+        myHeroGemType.clear();
+        myHeroGemType.addAll(botPlayer.getRecommendGemType());
+        System.out.println(myHeroGemType.toString());
         List<GemSwapInfo> listMatchGem = suggestMatch();
         if (listMatchGem.isEmpty()) {
             return new Pair<>(-1, -1);
@@ -82,6 +87,9 @@ public class Grid {
 //                }
 //            }
 //        }
+        for (GemSwapInfo gemSwapInfo : listMatchGem) {
+            if(Const.GEM_MODIFIER.contains(gemModifiers.getByte(gemSwapInfo.getIndex1()).toString())) return gemSwapInfo.getIndexSwapGem();
+        }
         return listMatchGem.get(0).getIndexSwapGem();
     }
 //find gem ăn dc
@@ -227,5 +235,53 @@ public class Grid {
             System.out.println();
         }
         System.out.println();
+    }
+    public int bestGem(){
+        List<AirSpirit> airSpirits = new ArrayList<>();
+        int z=gems.size()-1;
+        gemss = new int[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 7; j >=0; j--) {
+                gemss[i][j] = gems.get(z--).getType().getCode();
+            }
+        }
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                System.out.print(gemss[i][j]+" ");
+            }
+            System.out.println();
+        }
+        System.out.println("=================");
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(i!=0 && i!=7&& j!=0&&j!=7) {
+                    int temp=0;
+                    AirSpirit airSpirit = new AirSpirit();
+                    airSpirit.setX(i);
+                    airSpirit.setY(j);
+                    airSpirit.setGemType(GemType.from((byte) gemss[i][j]));
+                    for (int k = i-1; k <= i+1; k++) {
+                        for (int l = j-1; l <= j+1; l++) {
+                            if(gemss[k][l]==gemss[i][j]) temp++;
+                            System.out.print(gemss[k][l]+" ");
+                        }
+                        System.out.println();
+                    }
+                    System.out.println("========");
+                    airSpirit.setGem(temp);
+                    System.out.println(airSpirit);
+                    airSpirits.add(airSpirit);
+                }
+            }
+            System.out.println();
+        }
+        airSpirits.sort((o1, o2) -> {
+//            if (o1.getGem().equals(o2.getGem()))
+//                return o1.getGemType().compareTo(myHeroGemType.stream().findFirst().get());
+            return o2.getGem().compareTo(o1.getGem());
+        });
+        System.out.println(airSpirits.get(0));
+        AirSpirit response = airSpirits.get(0);
+        return 63-(response.getX()*10+response.getY());
     }
 }

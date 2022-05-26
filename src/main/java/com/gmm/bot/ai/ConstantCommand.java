@@ -24,4 +24,6 @@ public class ConstantCommand {
     public static final String ON_PLAYER_USE_SKILL = "ON_PLAYER_USE_SKILL";
 
     public static final String BATTLE_MODE = "BATTLE_MODE";
+
+
 }

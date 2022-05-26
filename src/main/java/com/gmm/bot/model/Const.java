@@ -1,5 +1,9 @@
 package com.gmm.bot.model;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class Const {
     public static final String ID_TOKEN = "ID_TOKEN";
 
@@ -25,4 +29,5 @@ public class Const {
     public static final String I_AM_READY = "Battle.I_AM_READY";
     public static final String LOBBY_FIND_GAME = "LOBBY_FIND_GAME";
     public static final String PLAYER_JOINED_GAME = "PLAYER_JOINED_GAME";
+    public static final Set<String> GEM_MODIFIER = new HashSet<>(Arrays.asList("6","5"));
 }

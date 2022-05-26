@@ -231,17 +231,17 @@ public abstract class BaseBot implements IEventListener {
 
 
 
-    protected void assignPlayers(Room room) {
-        User user1 = room.getPlayerList().get(0);
-        log("id user1: " + user1.getPlayerId());
-        if (user1.isItMe()) {
-            botPlayer = new Player(user1.getPlayerId(), "player1");
-            enemyPlayer = new Player(ENEMY_PLAYER_ID, "player2");
-        } else {
-            botPlayer = new Player(BOT_PLAYER_ID, "player2");
-            enemyPlayer = new Player(ENEMY_PLAYER_ID, "player1");
-        }
-    }
+//    protected void assignPlayers(Room room) {
+//        User user1 = room.getPlayerList().get(0);
+//        log("id user1: " + user1.getPlayerId());
+//        if (user1.isItMe()) {
+//            botPlayer = new Player(user1.getPlayerId(), "player1");
+//            enemyPlayer = new Player(ENEMY_PLAYER_ID, "player2");
+//        } else {
+//            botPlayer = new Player(BOT_PLAYER_ID, "player2");
+//            enemyPlayer = new Player(ENEMY_PLAYER_ID, "player1");
+//        }
+//    }
 
     protected void logStatus(String status, String logMsg) {
         log.info(this.username + "|" + status + "|" + logMsg + "\n");
@@ -256,9 +256,9 @@ public abstract class BaseBot implements IEventListener {
             log("onLogin()|" + event.getArguments().toString());
 
             // Find game after login
-            data.putUtfString("type", "");
-            data.putUtfString("adventureId", "");
-            sendZoneExtensionRequest(LOBBY_FIND_GAME, data);
+//            data.putUtfString("type", "");
+//            data.putUtfString("adventureId", "");
+//            sendZoneExtensionRequest(LOBBY_FIND_GAME, data);
         } catch (Exception e) {
             log("onLogin|error => " + e.getMessage());
             e.printStackTrace();
@@ -299,5 +299,30 @@ public abstract class BaseBot implements IEventListener {
         RestTemplate restTemplate = new RestTemplate();
         Object response= restTemplate.postForObject(URL,request,Object.class);
         this.token=response.toString().split("=")[1].replace("}","");
+    }
+    protected void assignPlayers(Room room) {
+        List<User> users = room.getPlayerList();
+        User user1 = users.get(0);
+        log("id user1: " + user1.getPlayerId() + " name:"+ user1.getName());
+        if(users.size() == 1){
+            if (user1.isItMe()) {
+                botPlayer = new Player(user1.getPlayerId(), "player1");
+                enemyPlayer = new Player(ENEMY_PLAYER_ID, "player2");
+            } else {
+                botPlayer = new Player(BOT_PLAYER_ID, "player2");
+                enemyPlayer = new Player(ENEMY_PLAYER_ID, "player1");
+            }
+            return;
+        }
+        User user2 = users.get(1);
+        log("id user2: " + user2.getPlayerId()+ " name:"+user2.getName());
+        if (user1.isItMe()) {
+            botPlayer = new Player(user1.getPlayerId(), "player"+user1.getPlayerId());
+            enemyPlayer = new Player(user2.getPlayerId(), "player"+user2.getPlayerId());
+        } else {
+            botPlayer = new Player(user2.getPlayerId(), "player"+user2.getPlayerId());
+            enemyPlayer = new Player(user1.getPlayerId(), "player"+user1.getPlayerId());
+        }
+
     }
 }
