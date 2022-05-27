@@ -162,13 +162,12 @@ public class GemBot extends BaseBot{
 //        if(!isBotTurn()){
 //            return;
 //        }
-        Optional<Hero> hero = botPlayer.anyHeroFullMana();
-        if(!hero.isPresent()){
-            taskScheduler.schedule(new SendRequestSwapGem(), new Date(System.currentTimeMillis() + delaySwapGem));
-        }
-        else {
-            taskScheduler.schedule(new SendReQuestSkill(hero.get()), new Date(System.currentTimeMillis() + delaySwapGem));
-        }
+//        Optional<Hero> hero = botPlayer.anyHeroFullMana();
+//        if(!hero.isPresent()){
+//            taskScheduler.schedule(new SendRequestSwapGem(), new Date(System.currentTimeMillis() + delaySwapGem));
+//        }
+//        taskScheduler.schedule(new SendReQuestSkill(), new Date(System.currentTimeMillis() + delaySwapGem));
+        taskScheduler.schedule(new SendRequestSwapGem(), new Date(System.currentTimeMillis() + delaySwapGem));
         System.out.println("SEND_ALERT");
     }
 

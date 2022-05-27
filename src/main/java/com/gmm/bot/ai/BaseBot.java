@@ -65,7 +65,7 @@ public abstract class BaseBot implements IEventListener {
 
     public void start() {
         try {
-            login2();
+//            login2();
             this.logStatus("init", "Initializing");
             this.init();
             this.connect();
@@ -80,6 +80,7 @@ public abstract class BaseBot implements IEventListener {
         data = new SFSObject();
         isJoinGameRoom = false;
         disconnect = false;
+        this.token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsaW5oLnZ1dGFpIiwiYXV0aCI6IlJPTEVfVVNFUiIsIkxBU1RfTE9HSU5fVElNRSI6MTY1MzY4NjQzMTMzOCwiZXhwIjoxNjU1NDg2NDMxfQ.PjBNwzOOdMdQhueEu4txS5ObHGPZrmWvvIfYm7ookPugL4XwYlhcepK_6sSCICRx0LVqukzvtETtuc49VZfhRw";
 //        this.token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsaW5oLnZ1dGFpIiwiYXV0aCI6IlJPTEVfVVNFUiIsIkxBU1RfTE9HSU5fVElNRSI6MTY1MjcxNzY0NjEwNSwiZXhwIjoxNjUyODA0MDQ2fQ.s5SuYqNYSeId8j8yiisMXHhorcxShrP9DyYPfXgPRSdNanBLPR5uNuwb_gNKWePhq2WO5Tfl9ZfMwYJi5_j_WA";
         this.sfsClient.addEventListener(SFSEvent.CONNECTION, this);
         this.sfsClient.addEventListener(SFSEvent.CONNECTION_LOST, this);
@@ -305,7 +306,7 @@ public abstract class BaseBot implements IEventListener {
         String URL ="http://172.16.100.112:8081/api/v1/user/authenticate";
         RestTemplate restTemplate = new RestTemplate();
         Object response= restTemplate.postForObject(URL,request,Object.class);
-        this.token=response.toString().split("=")[1].replace("}","");
+//        this.token=response.toString().split("=")[1].replace("}","");
     }
     protected void assignPlayers(Room room) {
         List<User> users = room.getPlayerList();

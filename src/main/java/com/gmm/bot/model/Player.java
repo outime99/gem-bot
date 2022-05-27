@@ -43,11 +43,22 @@ public class Player {
         return herolive.get(herolive.size()-1);
     }
 
-    public String bestHeroEnemy(List<Hero> heros) {
-        for (int i=0;i<heros.size();i++){
-            if(heros.get(i).isAlive() && Const.BEST_HERO.contains(heros.get(i).getName())) return heros.get(i).getName();
+    public String bestHeroEnemy(List<Hero> hero) {
+        Set<Hero> setHero = new HashSet<>(hero);
+        for (int i = 0; i < hero.size(); i++) {
+            if(hero.get(i).getName().equals("CERBERUS")) return hero.get(i).getName();
         }
-        return heros.get(heros.size()-1).getName();
+        for (int i = 0; i < hero.size(); i++) {
+            if(hero.get(i).getName().equals("AIR_SPIRIT")) return hero.get(i).getName();
+        }
+        for (int i = 0; i < hero.size(); i++) {
+            if(hero.get(i).getName().equals("THUNDER_GOD")) return hero.get(i).getName();
+        }
+        for (int i=0;i<Const.BEST_HERO.size();i++){
+            if(setHero.contains(Const.BEST_HERO.get(i))) return Const.BEST_HERO.get(i);
+        }
+
+        return hero.get(hero.size()-1).getName();
     }
 
     public Set<GemType> getRecommendGemType() {
