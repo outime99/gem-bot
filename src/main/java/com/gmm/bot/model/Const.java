@@ -1,5 +1,7 @@
 package com.gmm.bot.model;
 
+import com.gmm.bot.enumeration.GemModifier;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,5 +31,5 @@ public class Const {
     public static final String I_AM_READY = "Battle.I_AM_READY";
     public static final String LOBBY_FIND_GAME = "LOBBY_FIND_GAME";
     public static final String PLAYER_JOINED_GAME = "PLAYER_JOINED_GAME";
-    public static final Set<String> GEM_MODIFIER = new HashSet<>(Arrays.asList("6","5"));
+    public static final Set<GemModifier> GEM_MODIFIER = new HashSet<>(Arrays.asList(GemModifier.from(8),GemModifier.from(7),GemModifier.from(6),GemModifier.from(5)));
 }

@@ -26,6 +26,13 @@ public class Player {
         return heroes.stream().filter(hero -> hero.isAlive() && hero.isFullMana()).findFirst();
     }
 
+    public Hero firstHeroenEmyPlayerAlive() {
+//        return heroes.stream().filter(Hero::isAlive).findFirst().orElse(null);
+        List<Hero> herolive = heroes.stream().filter(Hero::isAlive).collect(Collectors.toList());
+        herolive.forEach(hero -> System.out.println(hero.getName()));
+        return herolive.get(0);
+    }
+
     public Hero firstHeroAlive() {
 //        return heroes.stream().filter(Hero::isAlive).findFirst().orElse(null);
         List<Hero> herolive = heroes.stream().filter(Hero::isAlive).collect(Collectors.toList());

@@ -49,8 +49,10 @@ public class Grid {
 
     public Pair<Integer> recommendSwapGem(Player botPlayer) {
         myHeroGemType.clear();
-        myHeroGemType.addAll(botPlayer.getRecommendGemType());
-        System.out.println(myHeroGemType.toString());
+//        myHeroGemType.addAll(botPlayer.getRecommendGemType());
+        myHeroGemType.addAll(Arrays.asList(GemType.GREEN,GemType.YELLOW,GemType.BLUE,GemType.BROWN,GemType.RED,GemType.PURPLE,GemType.SWORD));
+//        myHeroGemType.addAll(Arrays.asList(GemType.BLUE,GemType.BROWN,GemType.GREEN,GemType.YELLOW,GemType.RED,GemType.PURPLE,GemType.SWORD));
+//        System.out.println(myHeroGemType.toString());
         List<GemSwapInfo> listMatchGem = suggestMatch();
         if (listMatchGem.isEmpty()) {
             return new Pair<>(-1, -1);
@@ -60,11 +62,21 @@ public class Grid {
         if (matchGemSizeThanFour.isPresent()) {
             return matchGemSizeThanFour.get().getIndexSwapGem();
         }
+        for (GemSwapInfo gemSwapInfo : listMatchGem) {
+            List<GemSwapInfo> gemSwapInfos = new ArrayList<>();
+            if(checkGemModifier(gemSwapInfo)) {
+                gemSwapInfos.add(gemSwapInfo);
+            }
+            gemSwapInfos.sort(Comparator.comparing(o -> String.valueOf(o.getGemModifier().getCode())));
+            if(!gemSwapInfos.isEmpty()){
+                return gemSwapInfos.get(gemSwapInfos.size()-1).getIndexSwapGem();
+            }
+        }
         Optional<GemSwapInfo> matchGemSizeThanThree =
                 listMatchGem.stream().filter(gemMatch -> gemMatch.getSizeMatch() > 3 && myHeroGemType.contains(gemMatch.getType())).findFirst();
         if (matchGemSizeThanThree.isPresent()) {
-            System.out.println(matchGemSizeThanThree.get().getType());
-            System.out.println(myHeroGemType);
+//            System.out.println(matchGemSizeThanThree.get().getType());
+//            System.out.println(myHeroGemType);
             return matchGemSizeThanThree.get().getIndexSwapGem();
         }
         Optional<GemSwapInfo> matchGemSword =
@@ -72,13 +84,7 @@ public class Grid {
         if (matchGemSword.isPresent()) {
             return matchGemSword.get().getIndexSwapGem();
         }
-        for (GemType type : myHeroGemType) {
-            Optional<GemSwapInfo> matchGem =
-                    listMatchGem.stream().filter(gemMatch -> gemMatch.getType() == type).findFirst();
-            if (matchGem.isPresent()) {
-                return matchGem.get().getIndexSwapGem();
-            }
-        }
+
 //        for (GemSwapInfo gemSwap: listMatchGem) {
 //            for (GemType heroGemType : myHeroGemType) {
 //                if ((gemSwap.getSizeMatch() > 3 && heroGemType.equals(gemSwap.getType())) ||
@@ -87,10 +93,84 @@ public class Grid {
 //                }
 //            }
 //        }
-        for (GemSwapInfo gemSwapInfo : listMatchGem) {
-            if(Const.GEM_MODIFIER.contains(gemModifiers.getByte(gemSwapInfo.getIndex1()).toString())) return gemSwapInfo.getIndexSwapGem();
+
+        for (GemType type : myHeroGemType) {
+            Optional<GemSwapInfo> matchGem =
+                    listMatchGem.stream().filter(gemMatch -> gemMatch.getType() == type).findFirst();
+            if (matchGem.isPresent()) {
+                return matchGem.get().getIndexSwapGem();
+            }
         }
         return listMatchGem.get(0).getIndexSwapGem();
+    }
+
+    private boolean checkGemModifier(GemSwapInfo gemSwapInfo){
+        if(gemModifiers !=null){
+            System.out.println(Const.GEM_MODIFIER);
+            if(Const.GEM_MODIFIER.contains(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex1())))) {
+                gemSwapInfo.setGemModifier(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex1())));
+                return true;
+            }
+            else if(gemSwapInfo.getIndex2() <63) {
+                if(Const.GEM_MODIFIER.contains(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()+1)))) {
+                    gemSwapInfo.setGemModifier(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()+1)));
+                    return true;
+            }
+
+            }
+            else  if(gemSwapInfo.getIndex2() <62 ) {
+                if(Const.GEM_MODIFIER.contains(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()+2)))) {
+                    gemSwapInfo.setGemModifier(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()+2)));
+                    return true;
+                }
+            }
+
+                else if(gemSwapInfo.getIndex2()>1) {
+                if(Const.GEM_MODIFIER.contains(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()-1)))) {
+                    gemSwapInfo.setGemModifier(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()-1)));
+                    return true;
+            }
+
+                }
+                else if(gemSwapInfo.getIndex2()>8) {
+                if(Const.GEM_MODIFIER.contains(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()-2)))) {
+                    gemSwapInfo.setGemModifier(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()-2)));
+                    return true;
+            }
+
+                }
+                else if(gemSwapInfo.getIndex2()>8) {
+                if(Const.GEM_MODIFIER.contains(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()-8)))) {
+                    gemSwapInfo.setGemModifier(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()-8)));
+                    return true;
+            }
+
+                }
+                else if(gemSwapInfo.getIndex2()>56) {
+                if(Const.GEM_MODIFIER.contains(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()+8)))) {
+                    gemSwapInfo.setGemModifier(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()+8)));
+                    return true;
+            }
+
+                }
+                else if(gemSwapInfo.getIndex2()>16) {
+                if(Const.GEM_MODIFIER.contains(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()-16)))) {
+                    gemSwapInfo.setGemModifier(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()-16)));
+                    return true;
+            }
+
+                }
+                else if(gemSwapInfo.getIndex2()<47) {
+                if(Const.GEM_MODIFIER.contains(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()+16)))) {
+                    gemSwapInfo.setGemModifier(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex2()+16)));
+                    return true;
+            }
+
+                }
+
+
+            }
+        return false;
     }
 //find gem ăn dc
     public List<GemSwapInfo> suggestMatch() {
@@ -263,17 +343,17 @@ public class Grid {
                     for (int k = i-1; k <= i+1; k++) {
                         for (int l = j-1; l <= j+1; l++) {
                             if(gemss[k][l]==gemss[i][j]) temp++;
-                            System.out.print(gemss[k][l]+" ");
+//                            System.out.print(gemss[k][l]+" ");
                         }
-                        System.out.println();
+//                        System.out.println();
                     }
-                    System.out.println("========");
+//                    System.out.println("========");
                     airSpirit.setGem(temp);
-                    System.out.println(airSpirit);
+//                    System.out.println(airSpirit);
                     airSpirits.add(airSpirit);
                 }
             }
-            System.out.println();
+//            System.out.println();
         }
         airSpirits.sort((o1, o2) -> {
 //            if (o1.getGem().equals(o2.getGem()))
@@ -282,6 +362,6 @@ public class Grid {
         });
         System.out.println(airSpirits.get(0));
         AirSpirit response = airSpirits.get(0);
-        return 63-(response.getX()*10+response.getY());
+        return Math.abs(63-(response.getX()*10+response.getY()));
     }
 }

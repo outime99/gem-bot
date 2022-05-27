@@ -146,7 +146,14 @@ public class GemBot extends BaseBot{
             if (heroCastSkill.isHeroSelfSkill()) {
                 data.putUtfString("targetId", botPlayer.firstHeroAlive().getId().toString());
             } else {
-                data.putUtfString("targetId", enemyPlayer.firstHeroAlive().getId().toString());
+                if(!botPlayer.firstHeroAlive().getId().toString().equals("CERBERUS")) {
+                    data.putUtfString("targetId", enemyPlayer.firstHeroAlive().getId().toString());
+                }
+                if(botPlayer.firstHeroAlive().getId().toString().equals("CERBERUS") && enemyPlayer.firstHeroAlive().getAttack() > 6 ){
+                    data.putUtfString("targetId", enemyPlayer.firstHeroAlive().getId().toString());
+                }
+                else new SendRequestSwapGem().run();
+//                data.putUtfString("targetId", enemyPlayer.firstHeroAlive().getId().toString());
             }
             data.putUtfString("selectedGem", String.valueOf(selectGem().getCode()));
 //            data.putUtfString("gemIndex", String.valueOf(ThreadLocalRandom.current().nextInt(64)));
@@ -157,6 +164,11 @@ public class GemBot extends BaseBot{
             sendExtensionRequest(ConstantCommand.USE_SKILL, data);
         }
 
+    }
+
+    @Override
+    protected void showError(SFSObject data) {
+        taskScheduler.schedule(new SendRequestSwapGem(), new Date(System.currentTimeMillis() + delaySwapGem));
     }
 
     private class SendRequestSwapGem implements Runnable {
