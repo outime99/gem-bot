@@ -50,8 +50,8 @@ public class Grid {
     public Pair<Integer> recommendSwapGem(Player botPlayer) {
         myHeroGemType.clear();
 //        myHeroGemType.addAll(botPlayer.getRecommendGemType());
-        myHeroGemType.addAll(Arrays.asList(GemType.GREEN,GemType.YELLOW,GemType.BLUE,GemType.BROWN,GemType.RED,GemType.PURPLE,GemType.SWORD));
-//        myHeroGemType.addAll(Arrays.asList(GemType.BLUE,GemType.BROWN,GemType.GREEN,GemType.YELLOW,GemType.RED,GemType.PURPLE,GemType.SWORD));
+//        myHeroGemType.addAll(Arrays.asList(GemType.GREEN,GemType.YELLOW,GemType.BLUE,GemType.BROWN,GemType.RED,GemType.PURPLE,GemType.SWORD));
+        myHeroGemType.addAll(Arrays.asList(GemType.BLUE,GemType.BROWN,GemType.GREEN,GemType.YELLOW,GemType.RED,GemType.PURPLE,GemType.SWORD));
 //        System.out.println(myHeroGemType.toString());
         List<GemSwapInfo> listMatchGem = suggestMatch();
         if (listMatchGem.isEmpty()) {
@@ -79,11 +79,11 @@ public class Grid {
 //            System.out.println(myHeroGemType);
             return matchGemSizeThanThree.get().getIndexSwapGem();
         }
-        Optional<GemSwapInfo> matchGemSword =
-                listMatchGem.stream().filter(gemMatch -> gemMatch.getType() == GemType.SWORD).findFirst();
-        if (matchGemSword.isPresent()) {
-            return matchGemSword.get().getIndexSwapGem();
-        }
+//        Optional<GemSwapInfo> matchGemSword =
+//                listMatchGem.stream().filter(gemMatch -> gemMatch.getType() == GemType.SWORD).findFirst();
+//        if (matchGemSword.isPresent()) {
+//            return matchGemSword.get().getIndexSwapGem();
+//        }
 
 //        for (GemSwapInfo gemSwap: listMatchGem) {
 //            for (GemType heroGemType : myHeroGemType) {
