@@ -214,15 +214,15 @@ public abstract class BaseBot implements IEventListener {
             case ConstantCommand.PLAYER_JOINED_GAME:
                 sendExtensionRequest(ConstantCommand.I_AM_READY, new SFSObject());
                 break;
-            case ConstantCommand.SEND_ALERT:
-                showError(params);
+//            case ConstantCommand.SEND_ALERT:
+//                showError(params);
         }
     }
 
-    protected void showError(SFSObject data){
-        String error = data.getUtfString("message");
-        log(error);
-    }
+//    protected void showError(SFSObject data){
+//        String error = data.getUtfString("message");
+//        log(error);
+//    }
 
     protected abstract void startGame(ISFSObject gameSession, Room room);
 

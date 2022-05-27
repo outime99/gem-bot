@@ -166,10 +166,10 @@ public class GemBot extends BaseBot{
 
     }
 
-    @Override
-    protected void showError(SFSObject data) {
-        taskScheduler.schedule(new SendRequestSwapGem(), new Date(System.currentTimeMillis() + delaySwapGem));
-    }
+//    @Override
+//    protected void showError(SFSObject data) {
+//        taskScheduler.schedule(new SendRequestSwapGem(), new Date(System.currentTimeMillis() + delaySwapGem));
+//    }
 
     private class SendRequestSwapGem implements Runnable {
         @Override
