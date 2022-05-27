@@ -146,30 +146,31 @@ public class GemBot extends BaseBot{
             if (heroCastSkill.isHeroSelfSkill()) {
                 data.putUtfString("targetId", botPlayer.firstHeroAlive().getId().toString());
             } else {
-                if(!botPlayer.firstHeroAlive().getId().toString().equals("CERBERUS")) {
-                    data.putUtfString("targetId", enemyPlayer.firstHeroAlive().getId().toString());
-                }
-                if(botPlayer.firstHeroAlive().getId().toString().equals("CERBERUS") && enemyPlayer.firstHeroAlive().getAttack() > 6 ){
-                    data.putUtfString("targetId", enemyPlayer.firstHeroAlive().getId().toString());
-                }
-                else new SendRequestSwapGem().run();
-//                data.putUtfString("targetId", enemyPlayer.firstHeroAlive().getId().toString());
+                data.putUtfString("targetId", enemyPlayer.bestHeroEnemy(enemyPlayer.getHeroes()));
             }
             data.putUtfString("selectedGem", String.valueOf(selectGem().getCode()));
-//            data.putUtfString("gemIndex", String.valueOf(ThreadLocalRandom.current().nextInt(64)));
-            data.putUtfString("gemIndex", String.valueOf(grid.bestGem()));
+            data.putUtfString("gemIndex", String.valueOf(ThreadLocalRandom.current().nextInt(64)));
             data.putBool("isTargetAllyOrNot",false);
             log("sendExtensionRequest()|room:" + room.getName() + "|extCmd:" + ConstantCommand.USE_SKILL + "|Hero cast skill: " + heroCastSkill.getName());
-            log(data.getUtfString("gemIndex"));
             sendExtensionRequest(ConstantCommand.USE_SKILL, data);
         }
-
     }
 
-//    @Override
-//    protected void showError(SFSObject data) {
-//        taskScheduler.schedule(new SendRequestSwapGem(), new Date(System.currentTimeMillis() + delaySwapGem));
-//    }
+    @Override
+    protected void showError(SFSObject data) {
+//        currentPlayerId = data.getInt("currentPlayerId");
+//        if(!isBotTurn()){
+//            return;
+//        }
+        Optional<Hero> hero = botPlayer.anyHeroFullMana();
+        if(!hero.isPresent()){
+            taskScheduler.schedule(new SendRequestSwapGem(), new Date(System.currentTimeMillis() + delaySwapGem));
+        }
+        else {
+            taskScheduler.schedule(new SendReQuestSkill(hero.get()), new Date(System.currentTimeMillis() + delaySwapGem));
+        }
+        System.out.println("SEND_ALERT");
+    }
 
     private class SendRequestSwapGem implements Runnable {
         @Override

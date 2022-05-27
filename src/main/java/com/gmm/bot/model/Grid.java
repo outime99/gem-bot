@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Getter
@@ -49,9 +50,17 @@ public class Grid {
 
     public Pair<Integer> recommendSwapGem(Player botPlayer) {
         myHeroGemType.clear();
-//        myHeroGemType.addAll(botPlayer.getRecommendGemType());
+        myHeroGemType.addAll(botPlayer.getRecommendGemType());
+//        botPlayer.getHeroes().forEach(hero -> {
+//            if(hero.isAlive() && !hero.isFullMana()) {
+//                List<GemType> gemTypes = hero.getGemTypes();
+//                Set<GemType> set = new HashSet<>();
+//                set.addAll(gemTypes);
+//                myHeroGemType.stream().filter(gemType -> !set.contains(gemType)).collect(Collectors.toList());
+//            }
+//        });
 //        myHeroGemType.addAll(Arrays.asList(GemType.GREEN,GemType.YELLOW,GemType.BLUE,GemType.BROWN,GemType.RED,GemType.PURPLE,GemType.SWORD));
-        myHeroGemType.addAll(Arrays.asList(GemType.BLUE,GemType.BROWN,GemType.GREEN,GemType.YELLOW,GemType.RED,GemType.PURPLE,GemType.SWORD));
+//        myHeroGemType.addAll(Arrays.asList(GemType.BLUE,GemType.BROWN,GemType.GREEN,GemType.YELLOW,GemType.RED,GemType.PURPLE,GemType.SWORD));
 //        System.out.println(myHeroGemType.toString());
         List<GemSwapInfo> listMatchGem = suggestMatch();
         if (listMatchGem.isEmpty()) {
@@ -106,7 +115,7 @@ public class Grid {
 
     private boolean checkGemModifier(GemSwapInfo gemSwapInfo){
         if(gemModifiers !=null){
-            System.out.println(Const.GEM_MODIFIER);
+//            System.out.println(Const.GEM_MODIFIER);
             if(Const.GEM_MODIFIER.contains(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex1())))) {
                 gemSwapInfo.setGemModifier(GemModifier.from(gemModifiers.getByte(gemSwapInfo.getIndex1())));
                 return true;

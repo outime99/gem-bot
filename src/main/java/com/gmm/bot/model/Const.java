@@ -32,4 +32,5 @@ public class Const {
     public static final String LOBBY_FIND_GAME = "LOBBY_FIND_GAME";
     public static final String PLAYER_JOINED_GAME = "PLAYER_JOINED_GAME";
     public static final Set<GemModifier> GEM_MODIFIER = new HashSet<>(Arrays.asList(GemModifier.from(8),GemModifier.from(7),GemModifier.from(6),GemModifier.from(5)));
+    public static final Set<String> BEST_HERO = new HashSet<>(Arrays.asList("THUNDER_GOD","CERBERUS","AIR_SPIRIT","SEA_GOD","FIRE_SPIRIT"));
 }
