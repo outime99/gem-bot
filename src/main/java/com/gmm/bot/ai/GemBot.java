@@ -63,7 +63,10 @@ public class GemBot extends BaseBot{
         if (!isBotTurn()) {
             return;
         }
-        taskScheduler.schedule(new SendRequestSwap5Gem(), new Date(System.currentTimeMillis() + delaySwapGem));
+        if(grid.checkMatch5()!=null){
+            taskScheduler.schedule(new SendRequestSwap5Gem(), new Date(System.currentTimeMillis() + delaySwapGem));
+            return;
+        }
         Optional<Hero> heroFullMana = botPlayer.anyHeroFullMana();
         if (heroFullMana.isPresent()) {
             taskScheduler.schedule(new SendReQuestSkill(heroFullMana.get()), new Date(System.currentTimeMillis() + delaySwapGem));
@@ -161,6 +164,7 @@ public class GemBot extends BaseBot{
     @Override
     protected void showError(SFSObject data) {
         String error = data.getUtfString("message");
+        System.out.println(error);
         log(error);
 //        currentPlayerId = data.getInt("currentPlayerId");
 //        if(!isBotTurn()){
