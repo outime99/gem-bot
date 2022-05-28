@@ -46,18 +46,18 @@ public class Player {
     public String bestHeroEnemy(List<Hero> hero) {
         Set<Hero> setHero = new HashSet<>(hero);
         for (int i = 0; i < hero.size(); i++) {
-            if(hero.get(i).getName().equals("CERBERUS")) return hero.get(i).getName();
+            if(hero.get(i).getName().equals("CERBERUS") && hero.get(i).isAlive()) return hero.get(i).getName();
         }
         for (int i = 0; i < hero.size(); i++) {
-            if(hero.get(i).getName().equals("AIR_SPIRIT")) return hero.get(i).getName();
+            if(hero.get(i).getName().equals("AIR_SPIRIT")&& hero.get(i).isAlive()) return hero.get(i).getName();
         }
         for (int i = 0; i < hero.size(); i++) {
-            if(hero.get(i).getName().equals("THUNDER_GOD")) return hero.get(i).getName();
+            if(hero.get(i).getName().equals("THUNDER_GOD")&& hero.get(i).isAlive()) return hero.get(i).getName();
         }
         for (int i=0;i<Const.BEST_HERO.size();i++){
-            if(setHero.contains(Const.BEST_HERO.get(i))) return Const.BEST_HERO.get(i);
+            if(setHero.contains(Const.BEST_HERO.get(i))&& hero.get(i).isAlive()) return Const.BEST_HERO.get(i);
         }
-
+        hero.stream().filter(hero1 -> hero1.isAlive()).collect(Collectors.toList());
         return hero.get(hero.size()-1).getName();
     }
 

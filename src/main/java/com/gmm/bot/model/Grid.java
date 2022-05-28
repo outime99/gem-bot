@@ -373,4 +373,13 @@ public class Grid {
         AirSpirit response = airSpirits.get(0);
         return Math.abs(63-(response.getX()*10+response.getY()));
     }
+    public Pair<Integer> checkMatch5(){
+        List<GemSwapInfo> listMatchGem = suggestMatch();
+        Optional<GemSwapInfo> matchGemSizeThanFour =
+                listMatchGem.stream().filter(gemMatch -> gemMatch.getSizeMatch() > 4).findFirst();
+        if (matchGemSizeThanFour.isPresent()) {
+            return matchGemSizeThanFour.get().getIndexSwapGem();
+        }
+        return null;
+    }
 }

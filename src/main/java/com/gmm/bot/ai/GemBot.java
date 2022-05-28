@@ -63,6 +63,7 @@ public class GemBot extends BaseBot{
         if (!isBotTurn()) {
             return;
         }
+        taskScheduler.schedule(new SendRequestSwap5Gem(), new Date(System.currentTimeMillis() + delaySwapGem));
         Optional<Hero> heroFullMana = botPlayer.anyHeroFullMana();
         if (heroFullMana.isPresent()) {
             taskScheduler.schedule(new SendReQuestSkill(heroFullMana.get()), new Date(System.currentTimeMillis() + delaySwapGem));
@@ -152,12 +153,15 @@ public class GemBot extends BaseBot{
             data.putUtfString("gemIndex", String.valueOf(ThreadLocalRandom.current().nextInt(64)));
             data.putBool("isTargetAllyOrNot",false);
             log("sendExtensionRequest()|room:" + room.getName() + "|extCmd:" + ConstantCommand.USE_SKILL + "|Hero cast skill: " + heroCastSkill.getName());
+            log(heroCastSkill.getName()+ " "+ enemyPlayer.bestHeroEnemy(enemyPlayer.getHeroes()));
             sendExtensionRequest(ConstantCommand.USE_SKILL, data);
         }
     }
 
     @Override
     protected void showError(SFSObject data) {
+        String error = data.getUtfString("message");
+        log(error);
 //        currentPlayerId = data.getInt("currentPlayerId");
 //        if(!isBotTurn()){
 //            return;
@@ -171,10 +175,28 @@ public class GemBot extends BaseBot{
         System.out.println("SEND_ALERT");
     }
 
+
+//    @Override
+//    protected void showError(SFSObject data) {
+//        super.showError(data);
+//    }
+
     private class SendRequestSwapGem implements Runnable {
         @Override
         public void run() {
             Pair<Integer> indexSwap = grid.recommendSwapGem(botPlayer);
+            data.putInt("index1", indexSwap.getParam1());
+            data.putInt("index2", indexSwap.getParam2());
+            log("sendExtensionRequest()|room:" + room.getName() + "|extCmd:" + ConstantCommand.SWAP_GEM + "|index1: " + indexSwap.getParam1() + " index1: " + indexSwap.getParam2());
+            sendExtensionRequest(ConstantCommand.SWAP_GEM, data);
+        }
+    }
+
+    private class SendRequestSwap5Gem implements Runnable {
+        @Override
+        public void run() {
+            Pair<Integer> indexSwap = grid.checkMatch5();
+            if(indexSwap == null) return;
             data.putInt("index1", indexSwap.getParam1());
             data.putInt("index2", indexSwap.getParam2());
             log("sendExtensionRequest()|room:" + room.getName() + "|extCmd:" + ConstantCommand.SWAP_GEM + "|index1: " + indexSwap.getParam1() + " index1: " + indexSwap.getParam2());
