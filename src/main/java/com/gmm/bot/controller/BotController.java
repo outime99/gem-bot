@@ -15,6 +15,7 @@ public class BotController implements InitializingBean {
     public void afterPropertiesSet() {
         GemBot bot =  botObjectFactory.getObject();
         bot.start();
+        System.out.println("create pull request");
         System.out.println("Start bot "+ bot.getUsername()+" successfully");
     }
 }
